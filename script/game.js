@@ -7,7 +7,7 @@ class Game extends Node {
 
     constructor() {
         super();
-        this.canClick = true;
+        this.canClick = false;
         this.firstCard = null;
         this.secondCard = null;
 
@@ -25,29 +25,39 @@ class Game extends Node {
         this.elm.style.backgroundImage = "url(./images/trucxanh_bg.jpg)";
         this._createBtnPlay();
         this._createScore();
+        this.canClick = true;
     }
 
     _createCards() {
         this.cards = [];
         for (let index = 0; index < 20; index++) {
             let card = new Card(index);
+            card.x = (800 - 100) / 2;
+            card.y = (500 - 100) / 2;
+            card.elm.addEventListener("click", this.onClickCard.bind(this, card));
             this.cards.push(card);
             card.setValue(index % 10);
-
+            this.addChild(card);
         }
-        this.cards = this.cards.sort(function () {
+        this.cards = this.cards.sort(function() {
             return Math.random() - 0.5
         });
-
-        this.cards.forEach((card, index) => {
-            let row = index % 5;
-            let col = Math.floor(index / 5);
-            card.x = row * 110;
-            card.y = col * 110;
-            card.elm.addEventListener("click", this.onClickCard.bind(this, card))
-            this.addChild(card);
-        });
+        this.move();
     }
+
+    move() {
+        const tl = gsap.timeline();
+        for (let i = 0; i < 20; i++) {
+            let row = i % 5;
+            let col = Math.floor(i / 5);
+            tl.to(this.cards[i], 0.3, {
+                ease: Back.easeOut.config(6),
+                x: row * 110,
+                y: col * 110,
+            })
+        };
+    }
+
     _createScore() {
         this.lblScore = new Label();
         this.lblScore.text = 'score: ' + this.score;
@@ -81,68 +91,63 @@ class Game extends Node {
         if (card === this.firstCard) return;
 
         if (this.firstCard === null) {
-
             // open card
             this.firstCard = card;
             this.firstCard.open();
-
 
         } else {
             this.canClick = false;
             this.secondCard = card;
             this.secondCard.open();
-            // console.log(card)
-            // open card
-            setTimeout(() => {
-                this.compareCard();
-                this.firstCard = null;
-            }, 1000)
+
+            this.compareCard();
+
         }
     }
 
     compareCard() {
-        // console.log('fValue: ', this.firstCard.value);
-        // console.log(' sValue: ', this.secondCard.value);
+        console.log(this.firstCard.index, this.firstCard.value);
+        console.log(this.secondCard.index, this.secondCard.value);
         if (this.firstCard.value === this.secondCard.value) {
             this.success();
-            this.animationScore("+");
+            this.score += this.alpha;
             this.winGame();
         } else {
             this.failed();
-            this.animationScore("-");
+            this.score -= this.alpha;
             this.loseGame();
         }
+        setTimeout(() => {
+            this.canClick = true;
+            this.firstCard = null;
+            this.secondCard = null;
+            console.log("reset var");
+        }, 3000);
+        this.lblScore.text = 'score: ' + this.score;
     }
 
-    animationScore(whatMath) {
-        if (startScore === endScore) return;
-        const range = endScore - startScore;
-        let current = startScore;
-        const increment = endScore > startScore ? 1 : -1;
-        const stepTime = Math.abs(Math.floor(1000 / range));
-        let timeAnimateScore = setInterval(() => {
-            current += increment
-            this.lblScore.text = "Score: " + current;
-            if (this.score === endScore) {
-                clearInterval(timeAnimateScore);
-            }
-        }, 100);
-    }
 
     failed() {
-        console.log('failed');      
-        this.firstCard.close();
-        this.secondCard.close();
-        this.canClick = true;
+        console.log('failed');
+        setTimeout(() => {
+            this.firstCard.close();
+            this.secondCard.close();
+
+        }, 500);
     }
 
     success() {
         console.log('success');
-        this.canClick = true;
-        this.firstCard.hide();
-        this.secondCard.hide();
-        this.removeChild(this.firstCard);
-        this.removeChild(this.secondCard);
+
+        setTimeout(() => {
+            this.firstCard.hide();
+            this.secondCard.hide();
+
+            setTimeout(() => {
+                this.removeChild(this.firstCard);
+                this.removeChild(this.secondCard);
+            }, 500);
+        }, 500);
     }
     resetGame() {
         document.getElementsByTagName("div")[0].innerHTML = "";

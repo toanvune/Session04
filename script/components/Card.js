@@ -39,7 +39,7 @@ export class Card extends Node {
         this.sprite.path = "./images/trucxanh" + value + ".jpg";
     }
     open() {
-        const tl = gsap.timeline({pause: true});
+        const tl = gsap.timeline({ pause: true });
         tl.to(this, { scaleX: 0, duration: 0.3 });
         tl.call(() => {
             this.cover.elm.style.background = "none";
@@ -51,21 +51,21 @@ export class Card extends Node {
     close() {
         const tl = gsap.timeline();
         tl.delay(0.5);
-        tl.to(this.elm, {x: "+=10", yoyo: true, repeat: 1, duration: 0.3});
-        tl.to(this.elm, {x: "-=10", yoyo: true, repeat: 1, duration: 0.3});
+        tl.to(this.elm, { x: "+=10", yoyo: true, repeat: 1, duration: 0.3 });
+        tl.to(this.elm, { x: "-=10", yoyo: true, repeat: 1, duration: 0.3 });
         tl.to(this, { scaleX: 0, duration: 0.3 });
         tl.call(() => {
             this.cover.elm.style.background = "orange";
             this.label.elm.style.display = "block";
         })
         tl.to(this, { scaleX: 1, duration: 0.3 });
-        
+
 
     }
     hide() {
         const tl = gsap.timeline();
-        tl.to(this.elm, { zIndex: 1, scale: 1.5, duration: 0.3, delay: 1});
-        tl.to(this.elm, { zIndex: 1, scale: 0, duration: 0.3});
+        tl.to(this.elm, { zIndex: 1, scale: 1.5, duration: 0.3, delay: 0.3 });
+        tl.to(this.elm, { zIndex: 1, scale: 0, duration: 0.3 });
     }
-    
+
 }
