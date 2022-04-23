@@ -10,6 +10,8 @@ export class Card extends Node {
         this._createSprite();
         this._createCover();
         this._createLabel(this.index);
+        this.width = 100;
+        this.height = 100;
     }
     _createSprite() {
         this.sprite = new Sprite();
