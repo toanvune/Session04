@@ -16,6 +16,7 @@ class Game extends Node {
     }
     _init() {
         this.score = 100;
+        this.count = 0;
         this.x = 0;
         this.y = 0;
         this.width = 800;
@@ -78,15 +79,15 @@ class Game extends Node {
 
     move() {
         
-        for (let i = 0; i <= 19 ; i++) {
+        for (let i = 19; i >= 0; i--) {
             this.cards[i].opacity = 1;
-            let row = i % 5;
+            let row = i % 5
             let col = Math.floor(i / 5);
             TweenMax.to(this.cards[i], 0.3, {
                 ease: Back.easeOut.config(5), 
                 x: row * 110,
                 y: col * 110,
-                delay: i * 0.1
+                delay: (20 - i) * 0.11
             });
             
         };
@@ -121,7 +122,8 @@ class Game extends Node {
         this.btnPlaygame.elm.addEventListener("click", () => {
             this.resetGame();
             this._createCards();
-            this.btnPlaygame.text = "Replay"
+            this.btnPlaygame.text = "Replay";
+            this.btnPlaygame.display = "none";
         });
         this.addChild(this.btnPlaygame);
     }
@@ -151,21 +153,18 @@ class Game extends Node {
         console.log(this.secondCard.index, this.secondCard.value);
         if (this.firstCard.value === this.secondCard.value) {
             this.success();
-            // this.score += this.alpha;
+            if(this.count >= 10) this.winGame();
             
-            this.winGame();
         } else {
             this.failed();
-            // this.score -= this.alpha;
-            
-            this.loseGame();
+            if(this.score <= 0) this.loseGame();
         }
         setTimeout(() => {
             this.canClick = true;
             this.firstCard = null;
             this.secondCard = null;
             console.log("reset var");
-        }, 3000);
+        }, 2000);
     }
 
     
@@ -186,8 +185,6 @@ class Game extends Node {
     updateText() {
         // console.log(this.score);
         this.lblScore.text = "Score: " + this.score;
-
-        
     }
 
     failed() {
@@ -201,7 +198,7 @@ class Game extends Node {
 
     success() {
         console.log('success');
-
+        this.count += 1;
         setTimeout(() => {
             this.firstCard.hide();
             this.secondCard.hide();
@@ -218,17 +215,23 @@ class Game extends Node {
 
     }
     winGame() {
-        if (document.getElementsByTagName("div")[0].childElementCount <= 2 && this.score > 0) {
-            alert('Winner winner chicken diner');
-            this.btnPlaygame.text = 'Play again';
-        }
+            setTimeout(() => {
+                alert('Winner winner chicken diner');
+                this.btnPlaygame.text = 'Play again';
+                this.btnPlaygame.display = "block";
+            }, 1000);
+            
+        
     }
     loseGame() {
-        if (document.getElementsByTagName("div")[0].childElementCount > 2 && this.score <= 0) {
-            alert('Tệ');
+            setTimeout(() => {
+                alert('Tệ');
             this.resetGame();
             this.btnPlaygame.text = 'Play again';
-        }
+            this.btnPlaygame.display = "block";
+            }, 1000);
+            
+        
     }
 
 }

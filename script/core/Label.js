@@ -7,6 +7,15 @@ export class Label extends Node {
         this.size = 10;
         this.family = "Courier New Lucida Console";
         this.textColor = "red";
+        this._display = "block";
+    }
+
+    get display() {
+        return this._display;
+    }
+    set display(value){
+        this._display = value;
+        this.elm.style.display = value;
     }
 
     get text() {

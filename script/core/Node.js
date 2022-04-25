@@ -9,7 +9,7 @@ export class Node { // entity
         this.children = [];
         this._scaleX = 1;
         this._scaleY = 1;
-        this._opacity = 100;
+        this._opacity = 1;
     }
 
     get opacity(){
