@@ -45,7 +45,7 @@ class Game extends Node {
         setTimeout(() => {
             this.canClick = true;
         }, 6000);
-        //this.addCard();
+
     }
 
     shuffleValueInCard(array) {
@@ -210,7 +210,7 @@ class Game extends Node {
         }, 500);
     }
     resetGame() {
-        document.getElementsByTagName("div")[0].innerHTML = "";
+        this.elm.innerHTML = "";
         this._init();
 
     }
