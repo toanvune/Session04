@@ -53,8 +53,12 @@ export class Card extends Node {
     close() {
         const tl = gsap.timeline();
         tl.delay(0.5);
-        tl.to(this.elm, { x: "+=10", yoyo: true, repeat: 1, duration: 0.3 });
-        tl.to(this.elm, { x: "-=10", yoyo: true, repeat: 1, duration: 0.3 });
+        tl.to(this.elm, { x: "+=10", yoyo: true, repeat: 1, duration: 0.03 });
+        tl.to(this.elm, { x: "-=10", yoyo: true, repeat: 1, duration: 0.03 });
+        tl.to(this.elm, { x: "+=10", yoyo: true, repeat: 1, duration: 0.03 });
+        tl.to(this.elm, { x: "-=10", yoyo: true, repeat: 1, duration: 0.03 });
+        tl.to(this.elm, { x: "+=10", yoyo: true, repeat: 1, duration: 0.03 });
+        tl.to(this.elm, { x: "-=10", yoyo: true, repeat: 1, duration: 0.03 });
         tl.to(this, { scaleX: 0, duration: 0.3 });
         tl.call(() => {
             this.cover.elm.style.background = "orange";

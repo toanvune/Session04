@@ -26,23 +26,40 @@ class Game extends Node {
         this._createBtnPlay();
         this._createScore();
         this.canClick = true;
+        this.showThis();
     }
 
     _createCards() {
         this.cards = [];
+        this.cardValue = [];
         for (let index = 0; index < 20; index++) {
             let card = new Card(index);
             card.x = (800 - 100) / 2;
             card.y = (500 - 100) / 2;
             card.elm.addEventListener("click", this.onClickCard.bind(this, card));
             this.cards.push(card);
-            card.setValue(index % 10);
+            
             this.addChild(card);
         }
-        this.cards = this.cards.sort(function() {
-            return Math.random() - 0.5
-        });
+        
         this.move();
+        this.shuffleValueInCard(this.cards);
+    }
+
+    shuffleValueInCard(array) {
+        const rndValue = [];
+        for(let i = 0; i < 10; i++) {
+            rndValue.push(i);
+            rndValue.push(i);
+        }
+        // rndValue.sort(function() {
+        //     return Math.random() - 0.5;
+        // });
+        array.forEach((element, index) => {
+            const value = rndValue[index];
+            console.log(element, value);
+            element.setValue(value);
+        });
     }
 
     move() {
@@ -51,11 +68,16 @@ class Game extends Node {
             let row = i % 5;
             let col = Math.floor(i / 5);
             tl.to(this.cards[i], 0.3, {
-                ease: Back.easeOut.config(6),
+                ease: Back.easeOut.config(5),
                 x: row * 110,
                 y: col * 110,
-            })
+                delay: i * 0.1
+            });
         };
+    }
+
+    showThis() {
+        console.log(this);
     }
 
     _createScore() {
@@ -110,11 +132,13 @@ class Game extends Node {
         console.log(this.secondCard.index, this.secondCard.value);
         if (this.firstCard.value === this.secondCard.value) {
             this.success();
-            this.score += this.alpha;
+            // this.score += this.alpha;
+            this.plusScore();
             this.winGame();
         } else {
             this.failed();
-            this.score -= this.alpha;
+            // this.score -= this.alpha;
+            this.minusScore();
             this.loseGame();
         }
         setTimeout(() => {
@@ -123,9 +147,30 @@ class Game extends Node {
             this.secondCard = null;
             console.log("reset var");
         }, 3000);
-        this.lblScore.text = 'score: ' + this.score;
+        // this.lblScore.text = 'score: ' + this.score;
     }
 
+    
+
+    plusScore() {
+        TweenLite.to(this, 1, {score: "+=10", roundProps: "score", onUpdate: ()=>{
+            this.updateText();
+        }});
+    }
+
+    minusScore() {
+        TweenLite.to(this, 1, {score: "-=10", roundProps: "score", onUpdate: ()=>{
+            this.updateText();
+        }});
+        console.log(this.score);
+    }
+
+    updateText() {
+        // console.log(this.score);
+        this.lblScore.text = "Score: " + this.score;
+
+        
+    }
 
     failed() {
         console.log('failed');
