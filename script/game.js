@@ -10,10 +10,9 @@ class Game extends Node {
         this.canClick = false;
         this.firstCard = null;
         this.secondCard = null;
-
         this._init();
         this.alpha = Math.floor(this.score / 10);
-
+        this.canClick = false;
     }
     _init() {
         this.score = 100;
@@ -21,12 +20,11 @@ class Game extends Node {
         this.y = 0;
         this.width = 800;
         this.height = 600;
-        console.log(this);
         this.elm.style.backgroundImage = "url(./images/trucxanh_bg.jpg)";
         this._createBtnPlay();
         this._createScore();
-        this.canClick = true;
         this.showThis();
+        
     }
 
     _createCards() {
@@ -34,16 +32,19 @@ class Game extends Node {
         this.cardValue = [];
         for (let index = 0; index < 20; index++) {
             let card = new Card(index);
-            card.x = (800 - 100) / 2;
-            card.y = (500 - 100) / 2;
+            card.x = 400 / 2;
+            card.y = 250 / 2;
             card.elm.addEventListener("click", this.onClickCard.bind(this, card));
-            this.cards.push(card);
-            
-            this.addChild(card);
+            this.cards.push(card);   
+            this.addChild(card);        
         }
-        
-        this.move();
+        this.countAndMoveCard();
         this.shuffleValueInCard(this.cards);
+        
+        setTimeout(() => {
+            this.canClick = true;
+        }, 6000);
+        //this.addCard();
     }
 
     shuffleValueInCard(array) {
@@ -52,9 +53,9 @@ class Game extends Node {
             rndValue.push(i);
             rndValue.push(i);
         }
-        // rndValue.sort(function() {
-        //     return Math.random() - 0.5;
-        // });
+        //* rndValue.sort(function() {
+        //*     return Math.random() - 0.5;
+        //* });
         array.forEach((element, index) => {
             const value = rndValue[index];
             console.log(element, value);
@@ -62,18 +63,36 @@ class Game extends Node {
         });
     }
 
-    move() {
+    countAndMoveCard() {
         const tl = gsap.timeline();
-        for (let i = 0; i < 20; i++) {
+        for(let i = 19; i >= 0; i--) {
+            tl.to(this.cards[i], { x: 200, y: 250/2, opacity: 0, duration: 0.1 })
+                .to(this.cards[i].cover.elm, { display: "block", duration: 0.1}) 
+                           
+        }
+        tl.play();
+        tl.call(() => {
+            this.move()
+        });  
+    }
+
+    move() {
+        
+        for (let i = 0; i <= 19 ; i++) {
+            this.cards[i].opacity = 1;
             let row = i % 5;
             let col = Math.floor(i / 5);
-            tl.to(this.cards[i], 0.3, {
-                ease: Back.easeOut.config(5),
+            TweenMax.to(this.cards[i], 0.3, {
+                ease: Back.easeOut.config(5), 
                 x: row * 110,
                 y: col * 110,
                 delay: i * 0.1
             });
+            
         };
+
+        
+        
     }
 
     showThis() {
@@ -133,12 +152,12 @@ class Game extends Node {
         if (this.firstCard.value === this.secondCard.value) {
             this.success();
             // this.score += this.alpha;
-            this.plusScore();
+            
             this.winGame();
         } else {
             this.failed();
             // this.score -= this.alpha;
-            this.minusScore();
+            
             this.loseGame();
         }
         setTimeout(() => {
@@ -147,7 +166,6 @@ class Game extends Node {
             this.secondCard = null;
             console.log("reset var");
         }, 3000);
-        // this.lblScore.text = 'score: ' + this.score;
     }
 
     
@@ -177,7 +195,7 @@ class Game extends Node {
         setTimeout(() => {
             this.firstCard.close();
             this.secondCard.close();
-
+            this.minusScore();
         }, 500);
     }
 
@@ -187,7 +205,7 @@ class Game extends Node {
         setTimeout(() => {
             this.firstCard.hide();
             this.secondCard.hide();
-
+            this.plusScore();
             setTimeout(() => {
                 this.removeChild(this.firstCard);
                 this.removeChild(this.secondCard);

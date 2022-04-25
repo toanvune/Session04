@@ -9,6 +9,15 @@ export class Node { // entity
         this.children = [];
         this._scaleX = 1;
         this._scaleY = 1;
+        this._opacity = 100;
+    }
+
+    get opacity(){
+        return this._opacity;
+    }
+    set opacity(value){
+        this._opacity = value;
+        this.elm.style.opacity = value;
     }
 
     get scaleX(){

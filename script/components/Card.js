@@ -52,7 +52,7 @@ export class Card extends Node {
     }
     close() {
         const tl = gsap.timeline();
-        tl.delay(0.5);
+        tl.delay(0.3);
         tl.to(this.elm, { x: "+=10", yoyo: true, repeat: 1, duration: 0.03 });
         tl.to(this.elm, { x: "-=10", yoyo: true, repeat: 1, duration: 0.03 });
         tl.to(this.elm, { x: "+=10", yoyo: true, repeat: 1, duration: 0.03 });
