@@ -157,7 +157,7 @@ class Game extends Node {
             
         } else {
             this.failed();
-            if(this.score <= 0) this.loseGame();
+            if(this.score <= 10) this.loseGame();
         }
         setTimeout(() => {
             this.canClick = true;
